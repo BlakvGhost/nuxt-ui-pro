@@ -16,11 +16,13 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '20'
-          
+
       - name: Publish to npm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-        run: npm publish --access public --registry=https://registry.npmjs.org/
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
+          npm publish --access public
 
       - name: Cleanup
         run: npm --force cache clean
