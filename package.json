@@ -1,5 +1,5 @@
 {
-  "name": "@nuxt/ui-pro",
+  "name": "@blakvghost/ui-pro",
   "type": "module",
   "version": "0.7.5",
   "main": "./nuxt.config.ts",
@@ -21,14 +21,6 @@
     "link": "https://ui.nuxt.com/pro/purchase"
   },
   "scripts": {
-    "dev": "DEV=true nuxi dev .docs",
-    "build": "DEV=true nuxi generate .docs",
-    "play": "nuxi dev .playground",
-    "prepare": "DEV=true nuxi prepare .docs",
-    "lint": "eslint .",
-    "typecheck": "nuxi typecheck",
-    "release": "release-it",
-    "test": "TZ=Europe/Paris vitest"
   },
   "dependencies": {
     "@nuxt/ui": "^2.13.0",
