@@ -18,11 +18,11 @@
           </slot>
         </div>
 
-        <p v-if="title || $slots.title" :class="ui.title">
+        <h2 v-if="title || $slots.title" :class="ui.title">
           <slot name="title">
             {{ title }}
           </slot>
-        </p>
+        </h2>
 
         <p v-if="description || $slots.description" :class="ui.description">
           <slot name="description">
@@ -135,7 +135,7 @@ const config = computed(() => {
       wrapper: 'mb-3',
       base: ''
     },
-    title: 'text-gray-900 dark:text-white text-xl font-semibold truncate flex items-center gap-1.5 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors duration-200',
+    title: 'text-gray-900 dark:text-white text-xl font-semibold truncate group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors duration-200',
     description: 'text-base text-gray-500 dark:text-gray-400 mt-1',
     date: 'text-sm text-gray-500 dark:text-gray-400 font-medium pointer-events-none',
     authors: {

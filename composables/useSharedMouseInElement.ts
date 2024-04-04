@@ -20,11 +20,11 @@ export function useSharedMouseInElement (
 
         const { left, top } = el.getBoundingClientRect()
 
-        const eX = x.value - (left + window.scrollX)
-        const eY = y.value - (top + window.scrollY)
+        const eX = x.value - (left + defaultWindow!.scrollX)
+        const eY = y.value - (top + defaultWindow!.scrollY)
 
         // We don't update the value when the mouse to too far away
-        if (Math.abs(eX) > 1500 || Math.abs(eY) > 1500 || window.screen.width <= 800) {
+        if (Math.abs(eX) > 1500 || Math.abs(eY) > 1500 || defaultWindow!.screen.width <= 800) {
           return
         }
 

@@ -80,11 +80,14 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { Dialog, DialogPanel, TransitionRoot } from '@headlessui/vue'
+import { Dialog, DialogPanel, TransitionRoot, provideUseId } from '@headlessui/vue'
 import { getSlotChildrenText } from '../../lib/slots'
 import type { HeaderLink } from '#ui-pro/types'
+import { useId } from '#imports'
 
-const config = {
+const appConfig = useAppConfig()
+
+const config = computed(() => ({
   wrapper: 'bg-background/75 backdrop-blur border-b border-gray-200 dark:border-gray-800 -mb-px sticky top-0 z-50',
   container: 'flex items-center justify-between gap-3 h-[--header-height]',
   left: 'lg:flex-1 flex items-center gap-1.5',
@@ -99,11 +102,11 @@ const config = {
   button: {
     base: 'lg:hidden',
     icon: {
-      open: 'i-heroicons-bars-3',
-      close: 'i-heroicons-x-mark-20-solid'
+      open: appConfig.ui.icons.menu,
+      close: appConfig.ui.icons.close
     }
   }
-}
+}))
 
 defineOptions({
   inheritAttrs: false
@@ -127,7 +130,7 @@ const props = defineProps({
     default: undefined
   },
   ui: {
-    type: Object as PropType<Partial<typeof config>>,
+    type: Object as PropType<Partial<typeof config.value>>,
     default: () => ({})
   }
 })
@@ -142,4 +145,6 @@ const ariaLabel = computed(() => (props.title || (slots.title && getSlotChildren
 watch(() => route.fullPath, () => {
   isHeaderDialogOpen.value = false
 })
+
+provideUseId(() => useId())
 </script>

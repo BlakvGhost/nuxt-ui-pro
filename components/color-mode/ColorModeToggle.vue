@@ -13,6 +13,7 @@
         v-bind="$attrs"
         :on-icon="appConfig.ui.icons.dark"
         :off-icon="appConfig.ui.icons.light"
+        :aria-label="`Switch to ${isDark ? 'light' : 'dark'} mode`"
         disabled
       />
     </template>

@@ -1,6 +1,6 @@
 <template>
   <UCard :class="ui.wrapper" v-bind="attrs" :ui="ui">
-    <div :class="[align === 'center' && 'text-center', align === 'right' && 'lg:order-last']">
+    <div :class="ui.container">
       <h2 v-if="title || $slots.title" :class="ui.title">
         <slot name="title">
           {{ title }}
@@ -13,7 +13,7 @@
         </slot>
       </p>
 
-      <div v-if="links?.length || $slots.links" :class="[ui.links, align === 'center' && 'justify-center']">
+      <div v-if="links?.length || $slots.links" :class="ui.links">
         <slot name="links">
           <UButton v-for="(link, index) in links" :key="index" v-bind="link" @click="link.click" />
         </slot>
@@ -79,6 +79,12 @@ const config = computed(() => {
     card.divide = ''
   }
 
+  const container: string = twJoin(
+    '',
+    props.align === 'center' && 'text-center',
+    props.align === 'right' && 'lg:order-last'
+  )
+
   const base = twJoin(
     'flex flex-col',
     props.align !== 'center' && 'lg:grid lg:grid-cols-2 lg:items-center',
@@ -87,16 +93,22 @@ const config = computed(() => {
 
   const padding: string = props.card ? 'py-24 sm:py-32 sm:px-16' : 'py-24 sm:py-32 px-6 lg:px-8'
 
+  const links: string = twJoin(
+    'mt-10 flex items-center gap-x-6',
+    props.align === 'center' && 'justify-center'
+  )
+
   return {
     ...card,
     wrapper: 'relative',
+    container,
     body: {
       base,
       padding
     },
     title: 'text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl',
     description: 'mt-6 text-lg/8 text-gray-600 dark:text-gray-300',
-    links: 'mt-10 flex items-center gap-x-6'
+    links
   }
 })
 

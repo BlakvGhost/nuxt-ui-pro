@@ -9,5 +9,10 @@ export default defineNuxtConfig({
   css: [
     '#ui-pro/assets/css/main.css',
     '#ui-pro/assets/css/scrollbars.css'
-  ]
+  ],
+  vite: {
+    optimizeDeps: {
+      include: ['vue3-smooth-dnd']
+    }
+  }
 })

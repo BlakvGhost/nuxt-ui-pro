@@ -1,5 +1,5 @@
 <template>
-  <UAccordion :class="ui.wrapper" :items="items" :multiple="multiple" v-bind="attrs" :ui="{ item: ui.item }">
+  <UAccordion :class="ui.wrapper" :items="items" :multiple="multiple" v-bind="attrs" :ui="{ item: ui.item, container: ui.container }">
     <template #default="{ item, open }">
       <UButton
         color="gray"
@@ -33,12 +33,13 @@ const appConfig = useAppConfig()
 
 const config = computed(() => ({
   wrapper: 'divide-y divide-gray-200 dark:divide-gray-800 -mt-6',
+  container: 'divide-y divide-gray-200 dark:divide-gray-800',
   item: {
     size: 'text-base',
     padding: 'py-6'
   },
   button: {
-    base: 'text-left text-lg py-6',
+    base: 'text-left text-lg py-6 w-full',
     label: 'text-gray-900 dark:text-white',
     trailingIcon: {
       name: appConfig.ui.icons.chevron,

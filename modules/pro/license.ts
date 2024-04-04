@@ -1,7 +1,7 @@
 import { FetchError, ofetch } from 'ofetch'
 import { readPackageJSON, findNearestFile } from 'pkg-types'
 
-export async function validateLicense(opts: { key: string, dir: string, theme: { env: string, link: string } }) {
+export async function validateLicense (opts: { key: string, dir: string, theme: { env: string, link: string } }) {
   return true;
   if (!opts.key) {
     throw _createError(`Missing \`${opts.theme.env}\` license key.\nPurchase Nuxt UI Pro at \`${opts.theme.link}\` to build your app in production.`)
@@ -31,9 +31,9 @@ export async function validateLicense(opts: { key: string, dir: string, theme: {
   }
 }
 
-function _createError(message: string) {
+function _createError (message: string) {
   const error = new Error(message)
-  try { error.stack = '' } catch { /* runtime not supports */ }
+  try {error.stack = ''} catch { /* runtime not supports */ }
   return error
 }
 
@@ -48,7 +48,7 @@ interface GitInfo {
   url: string,
 }
 
-async function _getLocalGitInfo(rootDir: string): Promise<GitInfo | void> {
+async function _getLocalGitInfo (rootDir: string): Promise<GitInfo | void> {
   const remote = await _getLocalGitRemote(rootDir)
   if (!remote) {
     return
@@ -66,7 +66,7 @@ async function _getLocalGitInfo(rootDir: string): Promise<GitInfo | void> {
   }
 }
 
-async function _getLocalGitRemote(dir: string) {
+async function _getLocalGitRemote (dir: string) {
   try {
     // https://www.npmjs.com/package/parse-git-config#options
     const parseGitConfig = await import('parse-git-config' as string).then(
@@ -84,20 +84,20 @@ async function _getLocalGitRemote(dir: string) {
   }
 }
 
-function _getGitEnv(): GitInfo | void {
+function _getGitEnv (): GitInfo | void {
   // https://github.com/unjs/std-env/issues/59
   const envInfo = {
     // Provider
     provider: process.env.VERCEL_GIT_PROVIDER || // vercel
-      (process.env.GITHUB_SERVER_URL ? 'github' : undefined), // github
+     (process.env.GITHUB_SERVER_URL ? 'github' : undefined), // github
     // Owner
     owner: process.env.VERCEL_GIT_REPO_OWNER || // vercel
       process.env.GITHUB_REPOSITORY_OWNER || // github
       process.env.CI_PROJECT_PATH?.split('/').shift(), // gitlab
     // Name
     name: process.env.VERCEL_GIT_REPO_SLUG ||
-      process.env.GITHUB_REPOSITORY?.split('/').pop() ||  // github
-      process.env.CI_PROJECT_PATH?.split('/').splice(1).join('/'), // gitlab
+     process.env.GITHUB_REPOSITORY?.split('/').pop() ||  // github
+     process.env.CI_PROJECT_PATH?.split('/').splice(1).join('/'), // gitlab
     // Url
     url: process.env.REPOSITORY_URL // netlify
   }
@@ -118,7 +118,7 @@ function _getGitEnv(): GitInfo | void {
   }
 }
 
-async function _getPkgName(dir: string) {
+async function _getPkgName (dir: string) {
   if (process.env.npm_package_name) {
     return process.env.npm_package_name
   }

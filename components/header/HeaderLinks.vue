@@ -1,7 +1,7 @@
 <template>
   <ul v-if="links?.length" :class="ui.wrapper" v-bind="attrs">
     <li v-for="(link, index) of links" :key="index" class="relative">
-      <UPopover v-if="link.children?.length" v-bind="ui.popover">
+      <UPopover v-if="link.children?.length" v-bind="ui.default.popover">
         <template #default="{ open }">
           <ULink
             v-bind="getULinkProps(link)"
@@ -64,11 +64,13 @@ const config = computed(() => ({
     name: appConfig.ui.icons.external,
     base: 'w-3 h-3 absolute top-0.5 -right-3.5 text-gray-400 dark:text-gray-500'
   },
-  popover: {
-    mode: 'hover' as const,
-    openDelay: 0,
-    ui: {
-      width: 'max-w-[16rem]'
+  default: {
+    popover: {
+      mode: 'hover' as const,
+      openDelay: 0,
+      ui: {
+        width: 'max-w-[16rem]'
+      }
     }
   }
 }))

@@ -1,5 +1,5 @@
 <template>
-  <div :class="[ui.wrapper, align === 'center' && 'text-center', align === 'right' && 'text-right']" v-bind="attrs">
+  <div :class="ui.wrapper" v-bind="attrs">
     <h2 v-if="title" :class="ui.title">
       {{ title }}
     </h2>
@@ -11,12 +11,6 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-
-const config = {
-  wrapper: '',
-  title: 'text-lg font-semibold leading-8 text-gray-900 dark:text-white',
-  images: 'mx-auto mt-10 flex flex-wrap items-center justify-between gap-8'
-}
 
 defineOptions({
   inheritAttrs: false
@@ -36,8 +30,22 @@ const props = defineProps({
     default: undefined
   },
   ui: {
-    type: Object as PropType<Partial<typeof config>>,
+    type: Object as PropType<Partial<typeof config.value>>,
     default: () => ({})
+  }
+})
+
+const config = computed(() => {
+  const wrapper: string = ({
+    center: 'text-center',
+    right: 'text-right',
+    left: 'text-left'
+  })[props.align]
+
+  return {
+    wrapper,
+    title: 'text-lg font-semibold leading-8 text-gray-900 dark:text-white',
+    images: 'mx-auto mt-10 flex flex-wrap items-center justify-between gap-8'
   }
 })
 

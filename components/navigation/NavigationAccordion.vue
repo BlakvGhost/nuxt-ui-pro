@@ -3,13 +3,7 @@
     :key="route.path"
     :items="(items as AccordionItem[])"
     :multiple="multiple"
-    :ui="{
-      wrapper: [ui.wrapper, level > 0 && ui.level].filter(Boolean).join(' '),
-      item: {
-        padding: !multiple ? 'p-0 mb-3' : 'p-0 mb-3 lg:mb-6',
-        color: 'text-inherit dark:text-inherit'
-      }
-    }"
+    :ui="ui"
     v-bind="attrs"
   >
     <template #default="{ item, open }">
@@ -36,7 +30,6 @@
         :level="level + 1"
         :default-open="defaultOpen"
         :multiple="multiple"
-        :style="{ marginLeft: `${0.5 * (level + 1) + (0.5 * level)}rem` }"
         :class="ui.tree"
       />
     </template>
@@ -45,32 +38,50 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
+import { twJoin } from 'tailwind-merge'
 import type { AccordionItem } from '#ui/types'
 import type { NavigationTree } from '#ui-pro/types'
+import { accordion as accordionConfig } from '#ui/ui.config'
 
 const appConfig = useAppConfig()
 
-const config = computed(() => ({
-  wrapper: 'w-full block',
-  level: 'border-l border-gray-200 dark:border-gray-800 -ml-px pl-px hover:border-gray-300 dark:hover:border-gray-700',
-  button: {
-    base: 'flex items-center gap-1.5 group mb-3 w-full focus-visible:outline-primary',
-    active: 'text-primary border-current',
-    inactive: 'border-transparent',
-    level: 'border-l -ml-px pl-4',
-    icon: {
-      base: 'w-5 h-5 flex-shrink-0'
+const config = computed(() => {
+  const wrapper: string = twJoin(
+    'space-y-3',
+    props.level > 0 && 'border-l border-gray-200 dark:border-gray-800 -ml-px hover:border-gray-300 dark:hover:border-gray-700'
+  )
+
+  const tree: string = twJoin(
+    'border-l border-gray-200 dark:border-gray-800',
+    props.level > 0 ? 'ml-6' : 'ml-2.5'
+  )
+
+  return {
+    wrapper,
+    container: 'space-y-3',
+    item: {
+      padding: '',
+      color: 'text-inherit dark:text-inherit'
     },
-    trailingIcon: {
-      name: appConfig.ui.icons.chevron,
-      base: 'w-5 h-5 ms-auto transform transition-transform duration-200 flex-shrink-0 mr-1.5',
-      active: 'text-gray-700 dark:text-gray-200',
-      inactive: 'text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 -rotate-90'
+    button: {
+      base: 'flex items-center gap-1.5 group w-full focus-visible:outline-primary',
+      active: 'text-primary border-current',
+      inactive: 'border-transparent',
+      level: 'border-l -ml-px pl-3.5',
+      icon: {
+        base: 'w-5 h-5 flex-shrink-0'
+      },
+      trailingIcon: {
+        name: appConfig.ui.icons.chevron,
+        base: 'w-5 h-5 ms-auto transform transition-transform duration-200 flex-shrink-0 mr-1.5',
+        active: 'text-gray-700 dark:text-gray-200',
+        inactive: 'text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 -rotate-90'
+      },
+      label: 'text-sm/6 font-semibold truncate'
     },
-    label: 'text-sm/6 font-semibold truncate'
-  },
-  tree: 'border-l border-gray-200 dark:border-gray-800'
-}))
+    tree
+  }
+})
 
 defineOptions({
   inheritAttrs: false
@@ -98,7 +109,7 @@ const props = defineProps({
     default: undefined
   },
   ui: {
-    type: Object as PropType<Partial<typeof config.value>>,
+    type: Object as PropType<Partial<typeof config.value & typeof accordionConfig>>,
     default: () => ({})
   }
 })

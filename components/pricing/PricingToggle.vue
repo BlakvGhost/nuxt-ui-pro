@@ -18,7 +18,8 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { Switch } from '@headlessui/vue'
+import { Switch, provideUseId } from '@headlessui/vue'
+import { useId } from '#imports'
 
 defineOptions({
   inheritAttrs: false
@@ -69,4 +70,6 @@ const isYearly = computed({
 })
 
 const { ui, attrs } = useUI('pricing.toggle', toRef(props, 'ui'), config, toRef(props, 'class'), true)
+
+provideUseId(() => useId())
 </script>

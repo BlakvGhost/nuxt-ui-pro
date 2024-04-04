@@ -1,4 +1,4 @@
-import type { Link as ULink, Avatar, Badge, Command } from '#ui/types'
+import type { Link as ULink, Avatar, Badge, Chip, Command, Tooltip } from '#ui/types'
 
 export interface Link extends ULink {
   label: string
@@ -38,7 +38,6 @@ export interface NavigationLink extends Link {
 }
 
 export interface NavigationTree extends NavigationLink {
-  disabled?: boolean
   children?: NavigationTree[]
 }
 
@@ -48,5 +47,22 @@ export interface NavigationGroup {
   children: NavigationTree[]
 }
 
-export interface DocsSearchLink extends Link, Omit<Command, 'id'> {
+export interface ContentSearchLink extends Link, Omit<Command, 'id'> {
+}
+
+export interface DashboardSidebarLink extends Link {
+  labelClass?: string
+  icon?: string
+  iconClass?: string
+  avatar?: Avatar
+  avatarClass?: string
+  chip?: string | Chip
+  chipClass?: string
+  badge?: string | number | Badge
+  tooltip?: Tooltip
+  defaultOpen?: boolean
+  // Only applicable to links with children
+  draggable?: boolean
+  collapsible?: boolean
+  children?: DashboardSidebarLink[]
 }

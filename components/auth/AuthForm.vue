@@ -20,16 +20,15 @@
       </p>
     </div>
 
-    <div :class="[ui.container, align === 'top' && 'flex-col-reverse']">
-      <template v-if="providers?.length">
-        <div :class="ui.providers">
-          <UButton v-for="(provider, index) in providers" :key="index" v-bind="provider" block @click="provider.click" />
-        </div>
+    <div :class="ui.container">
+      <div v-if="providers?.length" :class="ui.providers">
+        <UButton v-for="(provider, index) in providers" :key="index" v-bind="provider" block @click="provider.click" />
+      </div>
 
-        <UDivider :label="divider" />
-      </template>
+      <UDivider v-if="providers?.length && fields?.length" :label="divider" />
 
       <UForm
+        v-if="fields?.length"
         ref="formRef"
         :state="state"
         :schema="schema"
@@ -63,7 +62,7 @@
             <slot :name="`${field.name}-help`" />
           </template>
         </UFormGroup>
-
+        <slot name="validation" />
         <UButton type="submit" block :loading="loading" v-bind="{ ...ui.default.submitButton, ...submitButton }" />
       </UForm>
     </div>
@@ -76,28 +75,9 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
+import { twJoin } from 'tailwind-merge'
 import { omit } from '#ui/utils'
 import type { Button, FormError, FormEventType, FormGroupSize } from '#ui/types'
-
-const config = {
-  wrapper: 'w-full max-w-sm space-y-6',
-  base: '',
-  container: 'gap-y-6 flex flex-col',
-  title: 'text-2xl text-gray-900 dark:text-white font-bold',
-  description: 'text-gray-500 dark:text-gray-400 mt-1',
-  icon: {
-    wrapper: 'mb-2 pointer-events-none',
-    base: 'w-8 h-8 flex-shrink-0 text-gray-900 dark:text-white'
-  },
-  providers: 'space-y-3',
-  form: 'space-y-6',
-  footer: 'text-sm text-gray-500 dark:text-gray-400 mt-2',
-  default: {
-    submitButton: {
-      label: 'Continue'
-    }
-  }
-}
 
 defineOptions({
   inheritAttrs: false
@@ -135,6 +115,8 @@ const props = defineProps({
       size?: FormGroupSize
       placeholder?: string
       required?: boolean
+      value?: string | number
+      readonly?: boolean
     }[]>,
     default: () => []
   },
@@ -167,25 +149,53 @@ const props = defineProps({
     default: undefined
   },
   ui: {
-    type: Object as PropType<Partial<typeof config>>,
+    type: Object as PropType<Partial<typeof config.value>>,
     default: () => ({})
   }
 })
 
 defineEmits(['submit'])
 
+const config = computed(() => {
+  const container: string = twJoin(
+    'gap-y-6 flex flex-col',
+    props.align === 'top' && 'flex-col-reverse'
+  )
+
+  return {
+    wrapper: 'w-full max-w-sm space-y-6',
+    base: '',
+    container,
+    title: 'text-2xl text-gray-900 dark:text-white font-bold',
+    description: 'text-gray-500 dark:text-gray-400 mt-1',
+    icon: {
+      wrapper: 'mb-2 pointer-events-none',
+      base: 'w-8 h-8 flex-shrink-0 text-gray-900 dark:text-white'
+    },
+    providers: 'space-y-3',
+    form: 'space-y-6',
+    footer: 'text-sm text-gray-500 dark:text-gray-400 mt-2',
+    default: {
+      submitButton: {
+        label: 'Continue'
+      }
+    }
+  }
+})
+
 const formRef = ref<HTMLElement>()
 
 const { ui, attrs } = useUI('auth.form', toRef(props, 'ui'), config, toRef(props, 'class'), true)
 
-const state = reactive(Object.values(props.fields).reduce((acc, { name }) => {
-  acc[name] = undefined
+const state = reactive(Object.values(props.fields).reduce((acc, { name, value }) => {
+  acc[name] = value
   return acc
 }, {} as Record<string, any>))
 
 // Expose
 
 defineExpose({
-  formRef
+  formRef,
+  state
 })
 </script>

@@ -8,29 +8,52 @@ import pkg from '../../package.json'
 
 export interface ModuleOptions {
   license?: string
+  routerOptions?: boolean
+  content?: boolean
 }
 
 export default defineNuxtModule({
   meta: {
     name: 'ui-pro',
-    configKey: 'uiPro'
+    configKey: 'uiPro',
+    compatibility: {
+      nuxt: '^3.10.0'
+    }
   },
   defaults: {
-    license: ''
+    license: '',
+    routerOptions: true,
+    content: false
   },
-  setup (_, nuxt) {
+  setup (options, nuxt) {
     const resolver = createResolver(import.meta.url)
+
+    if (options.routerOptions) {
+      nuxt.hook('pages:routerOptions', ({ files }) => {
+        files.push({
+          path: resolver.resolve('runtime/app/router.options.ts'),
+          optional: true
+        })
+      })
+    }
+
     /**
      * Add Content components & utils only if Nuxt Content is present
      */
-    if (hasNuxtModule('@nuxt/content')) {
+    if (hasNuxtModule('@nuxt/content') || options.content) {
       // Add auto-imported utils
       addImportsDir(resolver.resolve('runtime/utils'))
 
       addComponentsDir({
-        path: resolver.resolve('runtime/components/content'),
+        path: resolver.resolve('runtime/components/global'),
         global: true,
         prefix: '',
+        pathPrefix: false
+      })
+
+      addComponentsDir({
+        path: resolver.resolve('runtime/components/content'),
+        prefix: 'U',
         pathPrefix: false
       })
 
@@ -67,8 +90,8 @@ export default defineNuxtModule({
      */
     const theme = pkg.theme || { env: 'NUXT_UI_PRO_LICENSE', link: 'https://ui.nuxt.com/pro' }
     const key = process.env[theme.env] || (nuxt.options as any).uiPro?.license
-    if (nuxt.options.dev || nuxt.options._prepare) {
-      if (nuxt.options.dev && !key) {
+    if (nuxt.options.dev || nuxt.options._prepare || nuxt.options.test) {
+      if (false) {
         consola.box(
           colors.greenBright('Nuxt UI Pro') + '\n\n' +
           `Missing \`${theme.env}\` env variable, please add it to your \`.env\`.` + '\n\n' +
